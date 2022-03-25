@@ -54,10 +54,9 @@ void triangle(Vec2i *pts, TGAImage &image, TGAColor color) {
     Vec2i clamp(image.get_width()-1, image.get_height()-1); 
     for (int i=0; i<3; i++) { 
         bboxmin.x = std::max(0, std::min(bboxmin.x, pts[i].x));
-	bboxmin.y = std::max(0, std::min(bboxmin.y, pts[i].y));
-
-	bboxmax.x = std::min(clamp.x, std::max(bboxmax.x, pts[i].x));
-	bboxmax.y = std::min(clamp.y, std::max(bboxmax.y, pts[i].y));
+        bboxmin.y = std::max(0, std::min(bboxmin.y, pts[i].y));
+        bboxmax.x = std::min(clamp.x, std::max(bboxmax.x, pts[i].x));
+        bboxmax.y = std::min(clamp.y, std::max(bboxmax.y, pts[i].y));
     } 
     Vec2i P; 
     for (P.x=bboxmin.x; P.x<=bboxmax.x; P.x++) { 
@@ -75,8 +74,18 @@ int main(int argc, char** argv) {
 
         TGAImage image(width, height, TGAImage::RGB);
 
-        Vec2i pts[3] = {Vec2i(10,10), Vec2i(100, 30), Vec2i(190, 160)}; 
-        triangle(pts, image, red); 
+        // Vec2i pts[3] = {Vec2i(10,10), Vec2i(100, 30), Vec2i(190, 160)}; 
+        // triangle(pts, image, red); 
+        Model model("obj/african_head.obj");
+        for (int i=0; i<model.nfaces(); i++) { 
+            std::vector<int> face = model.face(i); 
+            Vec2i screen_coords[3]; 
+            for (int j=0; j<3; j++) { 
+                Vec3f world_coords = model.vert(face[j]); 
+                screen_coords[j] = Vec2i((world_coords.x+1.)*width/2., (world_coords.y+1.)*height/2.); 
+            } 
+            triangle(screen_coords, image, TGAColor(rand()%255, rand()%255, rand()%255, 255)); 
+        }
 
         image.flip_vertically(); // i want to have the origin at the left bottom corner of the image
         image.write_tga_file("output.tga");
