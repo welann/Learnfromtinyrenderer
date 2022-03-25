@@ -1,0 +1,6 @@
+[
+{
+  "directory": "/home/welann/tinyrenderer",
+  "arguments": ["/usr/bin/ccache", "/usr/bin/gcc", "-c", "-m64", "-Iinclude", "-o", "build/.objs/tinyrenderer/linux/x86_64/debug/src/main.cpp.o", "src/main.cpp"],
+  "file": "src/main.cpp"
+}]
